@@ -262,6 +262,10 @@ msgctxt "field:payment_gateway.transaction,id:"
 msgid "ID"
 msgstr "ID"
 
+msgctxt "field:payment_gateway.transaction,last_four_digits:"
+msgid "Last Four Digits"
+msgstr "Letzte vier Stellen"
+
 msgctxt "field:payment_gateway.transaction,logs:"
 msgid "Logs"
 msgstr "Logs"
@@ -305,6 +309,10 @@ msgstr "Lieferadresse"
 msgctxt "field:payment_gateway.transaction,state:"
 msgid "State"
 msgstr "Status"
+
+msgctxt "field:payment_gateway.transaction,type:"
+msgid "Type"
+msgstr "Typ"
 
 msgctxt "field:payment_gateway.transaction,uuid:"
 msgid "UUID"
@@ -425,6 +433,10 @@ msgstr "Zahlungsgateway Transaktionen"
 msgctxt "model:ir.action,name:wizard_add_payment_profile"
 msgid "Add payment profile"
 msgstr "Zahlungsprofil hinzufügen"
+
+msgctxt "model:ir.action,name:wizard_create_refund"
+msgid "Create Refund"
+msgstr "Erstattung durchführen"
 
 msgctxt "model:ir.action,name:wizard_transaction_use_card"
 msgid "Use Card"
@@ -611,6 +623,14 @@ msgstr "In Bearbeitung"
 msgctxt "selection:payment_gateway.transaction,state:"
 msgid "Posted"
 msgstr "Festgeschrieben"
+
+msgctxt "selection:payment_gateway.transaction,type:"
+msgid "Charge"
+msgstr "Belastung"
+
+msgctxt "selection:payment_gateway.transaction,type:"
+msgid "Refund"
+msgstr "Erstattung"
 
 msgctxt "selection:payment_gateway.transaction.use_card.view,expiry_month:"
 msgid "01-January"
