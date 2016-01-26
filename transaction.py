@@ -251,9 +251,24 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
         cls._order.insert(0, ('date', 'DESC'))
 
         cls._error_messages.update({
-            'feature_not_available': 'The feature %s is not avaialable '
-                                     'for provider %s',
+            'no_cancel_in_progress': 'Cannot cancel self payments which '
+                'are not manual and in-progress',
+            'cancellation_not_available': 'Cancellation is not '
+                'available for provider %s.',
+            'authorization_not_available': 'Authorization is not '
+                'available for provider %s.',
+            'retry_not_available': 'Retry is not '
+                'available for provider %s.',
+            'settle_not_available': 'Settle is not '
+                'available for provider %s.',
+            'capture_not_available': 'Capture is not '
+                'available for provider %s.',
+            'refund_not_available': 'Refund is not '
+                'available for provider %s.',
+            'update_status_not_available': 'Update Status is not '
+                'available for provider %s.',
             'process_only_manual': 'Only manual process can be processed.',
+
         })
         cls._transitions |= set((
             ('draft', 'in-progress'),
@@ -514,9 +529,7 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
         if self.method == 'manual' and \
                 self.state in ('in-progress', 'authorized'):
             return True
-        self.raise_user_error(
-            'Cannot cancel self payments which are not manual and in-progress'
-        )
+        self.raise_user_error('no_cancel_in_progress')
 
     @classmethod
     @ModelView.button
@@ -529,8 +542,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             method_name = 'cancel_%s' % transaction.gateway.provider
             if not hasattr(transaction, method_name):
                 cls.raise_user_error(
-                    'feature_not_available',
-                    ('cancellation', transaction.gateway.provider),
+                    'cancellation_not_available',
+                    (transaction.gateway.provider,),
                 )
             getattr(transaction, method_name)()
 
@@ -542,8 +555,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             method_name = 'authorize_%s' % transaction.gateway.provider
             if not hasattr(transaction, method_name):
                 cls.raise_user_error(
-                    'feature_not_available',
-                    ('authorization', transaction.gateway.provider),
+                    'authorization_not_available',
+                    (transaction.gateway.provider,),
                 )
             getattr(transaction, method_name)()
 
@@ -570,8 +583,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             method_name = 'retry_%s' % transaction.gateway.provider
             if not hasattr(transaction, method_name):
                 cls.raise_user_error(
-                    'feature_not_available',
-                    ('retry', transaction.gateway.provider)
+                    'retry_not_available',
+                    (transaction.gateway.provider,)
                 )
             getattr(transaction, method_name)()
 
@@ -583,8 +596,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             method_name = 'settle_%s' % transaction.gateway.provider
             if not hasattr(transaction, method_name):
                 cls.raise_user_error(
-                    'feature_not_available',
-                    ('settle', transaction.gateway.provider)
+                    'settle_not_available',
+                    (transaction.gateway.provider,)
                 )
             getattr(transaction, method_name)()
 
@@ -596,8 +609,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             method_name = 'capture_%s' % transaction.gateway.provider
             if not hasattr(transaction, method_name):
                 cls.raise_user_error(
-                    'feature_not_available',
-                    ('capture', transaction.gateway.provider)
+                    'capture_not_available',
+                    (transaction.gateway.provider,)
                 )
             getattr(transaction, method_name)()
 
@@ -626,8 +639,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             method_name = 'refund_%s' % transaction.gateway.provider
             if not hasattr(transaction, method_name):
                 cls.raise_user_error(
-                    'feature_not_available',
-                    ('refund', transaction.gateway.provider)
+                    'refund_not_available',
+                    (transaction.gateway.provider,)
                 )
             getattr(transaction, method_name)()
 
@@ -642,8 +655,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             method_name = 'update_%s' % transaction.gateway.provider
             if not hasattr(transaction, method_name):
                 cls.raise_user_error(
-                    'feature_not_available'
-                    ('update status', transaction.gateway.provider)
+                    'update_status_not_available'
+                    (transaction.gateway.provider,)
                 )
             getattr(transaction, method_name)()
 
