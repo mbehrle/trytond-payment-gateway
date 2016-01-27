@@ -3,12 +3,44 @@ msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:payment_gateway.transaction:"
+msgid "Authorization is not available for provider %s."
+msgstr "\"Autorisierung\" ist für Anbieter %s nicht verfügbar."
+
+msgctxt "error:payment_gateway.transaction:"
+msgid "Cancellation is not available for provider %s."
+msgstr "\"Annullierung\" ist für Anbieter %s nicht verfügbar."
+
+msgctxt "error:payment_gateway.transaction:"
+msgid "Cannot cancel self payments which are not manual and in-progress"
+msgstr "Annullierung von Zahlungen 'In Bearbeitung' nicht möglich."
+
+msgctxt "error:payment_gateway.transaction:"
+msgid "Capture is not available for provider %s."
+msgstr "\"Einzug\" ist für Anbieter %s nicht verfügbar."
+
+msgctxt "error:payment_gateway.transaction:"
 msgid "Only manual process can be processed."
 msgstr "Nur manuelle Vorgänge können durchgeführt werden"
 
 msgctxt "error:payment_gateway.transaction:"
+msgid "Refund is not available for provider %s."
+msgstr "\"Erstattung\" ist für Anbieter %s nicht verfügbar."
+
+msgctxt "error:payment_gateway.transaction:"
+msgid "Retry is not available for provider %s."
+msgstr "\"Wiederholung\" ist für Anbieter %s nicht verfügbar."
+
+msgctxt "error:payment_gateway.transaction:"
+msgid "Settle is not available for provider %s."
+msgstr "\"Begleichung\" ist für Anbieter %s nicht verfügbar."
+
+msgctxt "error:payment_gateway.transaction:"
 msgid "The feature %s is not avaialable for provider %s"
-msgstr "Feature %s ist für Provider %s nicht verfügbar"
+msgstr "Feature %s ist für Anbieter %s nicht verfügbar"
+
+msgctxt "error:payment_gateway.transaction:"
+msgid "Update Status is not available for provider %s."
+msgstr "\"Statusupdate\" ist für Anbieter %s nicht verfügbar."
 
 msgctxt "field:party.party,default_payment_profile:"
 msgid "Default Payment Profile"
@@ -60,7 +92,7 @@ msgstr "Partei"
 
 msgctxt "field:party.payment_profile,provider_reference:"
 msgid "Provider Reference"
-msgstr "Provider Beleg"
+msgstr "Anbieterbeleg"
 
 msgctxt "field:party.payment_profile,rec_name:"
 msgid "Name"
@@ -120,7 +152,7 @@ msgstr "Partei"
 
 msgctxt "field:party.payment_profile.add_view,provider:"
 msgid "Provider"
-msgstr "Provider"
+msgstr "Anbieter"
 
 msgctxt "field:party.payment_profile.add_view,swipe_data:"
 msgid "Swipe Card"
@@ -160,7 +192,7 @@ msgstr "Name"
 
 msgctxt "field:payment_gateway.gateway,provider:"
 msgid "Provider"
-msgstr "Provider"
+msgstr "Anbieter"
 
 msgctxt "field:payment_gateway.gateway,rec_name:"
 msgid "Name"
@@ -292,11 +324,11 @@ msgstr "Zahlungsprofil"
 
 msgctxt "field:payment_gateway.transaction,provider:"
 msgid "Provider"
-msgstr "Provider"
+msgstr "Anbieter"
 
 msgctxt "field:payment_gateway.transaction,provider_reference:"
 msgid "Provider Reference"
-msgstr "Provider Beleg"
+msgstr "Anbieterbeleg"
 
 msgctxt "field:payment_gateway.transaction,rec_name:"
 msgid "Name"
@@ -428,7 +460,7 @@ msgstr "Zahlungsgateways"
 
 msgctxt "model:ir.action,name:act_transaction"
 msgid "Payment Gateway Transactions"
-msgstr "Zahlungsgateway Transaktionen"
+msgstr "Gatewaytransaktionen"
 
 msgctxt "model:ir.action,name:wizard_add_payment_profile"
 msgid "Add payment profile"
@@ -470,7 +502,7 @@ msgstr "Zahlungsgateways"
 
 msgctxt "model:ir.ui.menu,name:menu_payment_transaction"
 msgid "Payment Gateway Transactions"
-msgstr "Zahlungsgateway Transaktionen"
+msgstr "Gatewaytransaktionen"
 
 msgctxt "model:party.payment_profile,name:"
 msgid "Secure Payment Profile"
@@ -490,7 +522,7 @@ msgstr "Zahlungsgateway - Benutzerverwaltung"
 
 msgctxt "model:payment_gateway.transaction,name:"
 msgid "Gateway Transaction"
-msgstr "Gateway Transaktionen"
+msgstr "Gatewaytransaktion"
 
 msgctxt "model:payment_gateway.transaction.log,name:"
 msgid "Transaction Log"
