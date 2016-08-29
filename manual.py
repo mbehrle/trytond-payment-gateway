@@ -65,6 +65,11 @@ class ManualSelfTransaction:
         self.save()
         self.safe_post()
 
+    def refund_self(self):
+        self.state = 'completed'
+        self.save()
+        self.safe_post()
+
     def cancel_dummy(self):
         """
         Cancel a dummy transaction
