@@ -736,11 +736,12 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             second_currency = self.currency
 
         refund = self.type == 'refund'
+
         lines = [{
             'description': self.rec_name,
             'account': self.credit_account.id,
             'party': self.party.id,
-            'debit': Decimal('0.0') if not refund else amount,
+            'debit': Decimal('0.0') if not refund else abs(amount),
             'credit': Decimal('0.0') if refund else amount,
             'amount_second_currency': amount_second_currency,
             'second_currency': second_currency,
@@ -748,7 +749,7 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             'description': self.rec_name,
             'account': journal.debit_account.id,
             'debit': Decimal('0.0') if refund else amount,
-            'credit': Decimal('0.0') if not refund else amount,
+            'credit': Decimal('0.0') if not refund else abs(amount),
             'amount_second_currency': amount_second_currency,
             'second_currency': second_currency,
         }]
@@ -788,8 +789,11 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
         refund_transaction, = self.copy([self])
 
         refund_transaction.type = 'refund'
-        refund_transaction.amount = amount or self.amount
+        amount = amount or self.amount
+        refund_transaction.amount = amount * -1
         refund_transaction.origin = self
+        refund_transaction.description = ('Refund for Transaction %s (%s)'
+            % (self.rec_name, self.uuid))
         refund_transaction.save()
 
         return refund_transaction
