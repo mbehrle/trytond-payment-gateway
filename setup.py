@@ -50,6 +50,7 @@ minor_version = int(minor_version)
 
 requires = [
     'pyyaml',
+    'babel',
 ]
 
 MODULE = 'payment_gateway'
@@ -83,10 +84,10 @@ setup(
         'trytond.modules.%s.tests' % MODULE,
     ],
     package_data={
-        'trytond.modules.%s' % MODULE: info.get('xml', [])
-        + info.get('translation', [])
-        + ['tryton.cfg', 'locale/*.po', 'tests/*.rst', '*.odt']
-        + ['view/*.xml'],
+        'trytond.modules.%s' % MODULE: info.get('xml', []) +
+        info.get('translation', []) +
+        ['tryton.cfg', 'locale/*.po', 'tests/*.rst', '*.odt'] +
+        ['view/*.xml'],
     },
     classifiers=[
         'Development Status :: 4 - Beta',

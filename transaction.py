@@ -3,10 +3,9 @@ import re
 from uuid import uuid4
 from decimal import Decimal
 from datetime import datetime
-from sql.functions import Trim, Substring
-from sql.operators import Concat
 
 import yaml
+from babel import numbers, dates
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, If, Bool
 from trytond.wizard import Wizard, StateView, StateTransition, \
@@ -14,7 +13,6 @@ from trytond.wizard import Wizard, StateView, StateTransition, \
 from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.model import ModelSQL, ModelView, Workflow, fields
-from trytond import backend
 
 
 __all__ = [
@@ -233,6 +231,34 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             self.payment_profile.rec_name, self.provider_reference
         )
 
+    def get_rec_blurb(self, name):
+        locale = Transaction().context.get('language', 'en_US') or 'en_US'
+        rv = {
+            'subtitle': [
+                ('Type', self.type),
+                ('Date', dates.format_date(
+                    self.date, 'short', locale=locale)),
+                ('Amount', numbers.format_currency(
+                    self.amount, currency=self.currency.code, locale=locale)),
+            ],
+            'description': ' | '.join(
+                filter(None, [
+                    self.description,
+                    self.payment_profile.rec_name,
+                    self.party.rec_name
+                ])
+            ),
+        }
+        if self.payment_profile:
+            rv['title'] = '%s | %s' % (
+                self.payment_profile.rec_name, self.provider_reference
+            )
+        else:
+            rv['title'] = '%s | %s' % (
+                self.gateway.name, self.provider_reference
+            )
+        return rv
+
     @classmethod
     def _get_origin(cls):
         'Return list of Model names for origin Reference'
@@ -353,75 +379,6 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
         cls.credit_account.depends += ['company']
 
     @classmethod
-    def __register__(cls, module_name):
-        Party = Pool().get('party.party')
-        Model = Pool().get('ir.model')
-        ModelField = Pool().get('ir.model.field')
-        Property = Pool().get('ir.property')
-        PaymentProfile = Pool().get('party.payment_profile')
-        TableHandler = backend.get('TableHandler')
-        cursor = Transaction().cursor
-        table = TableHandler(cursor, cls, module_name)
-
-        migration_needed = False
-        if not table.column_exist('credit_account'):
-            migration_needed = True
-
-        migrate_last_four_digits = False
-        if not table.column_exist('last_four_digits'):
-            migrate_last_four_digits = True
-
-        super(PaymentTransaction, cls).__register__(module_name)
-
-        if migration_needed and not Pool.test:
-            # Migration
-            # Set party's receivable account as the credit_account on
-            # transactions
-            transaction = cls.__table__()
-            party = Party.__table__()
-            property = Property.__table__()
-
-            account_model, = Model.search([
-                ('model', '=', 'party.party'),
-            ])
-            account_receivable_field, = ModelField.search([
-                ('model', '=', account_model.id),
-                ('name', '=', 'account_receivable'),
-                ('ttype', '=', 'many2one'),
-            ])
-
-            update = transaction.update(
-                columns=[transaction.credit_account],
-                values=[
-                    Trim(
-                        Substring(property.value, ',.*'), 'LEADING', ','
-                    ).cast(cls.credit_account.sql_type().base)
-                ],
-                from_=[party, property],
-                where=(
-                    transaction.party == party.id
-                ) & (
-                    property.res == Concat(Party.__name__ + ',', party.id)
-                ) & (
-                    property.field == account_receivable_field.id
-                ) & (
-                    property.company == transaction.company
-                )
-
-            )
-            cursor.execute(*update)
-
-        if migrate_last_four_digits and not Pool.test:
-            transaction = cls.__table__()
-            payment_profile = PaymentProfile.__table__()
-            cursor.execute(*transaction.update(
-                columns=[transaction.last_four_digits],
-                values=[payment_profile.last_4_digits],
-                from_=[payment_profile],
-                where=(transaction.payment_profile == payment_profile.id)
-            ))
-
-    @classmethod
     def _credit_account_domain(cls):
         """
         Return a list of account kind
@@ -473,30 +430,23 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
 
     @fields.depends('party')
     def on_change_party(self):
-        res = {
-            'address': None,
-            'credit_account': None,
-        }
         if self.party:
-            res['credit_account'] = self.party.account_receivable and \
-                    self.party.account_receivable.id
+            self.credit_account = self.party.account_receivable and \
+                    self.party.account_receivable.id or None
             try:
                 address = self.party.address_get(type='invoice')
             except AttributeError:
                 # account_invoice module is not installed
                 pass
             else:
-                res['address'] = address.id
-                res['address.rec_name'] = address.rec_name
-        return res
+                self.address = address.id
+                self.address.rec_name = address.rec_name
 
-    @fields.depends('payment_profile')
+    @fields.depends('payment_profile', 'address')
     def on_change_payment_profile(self):
-        res = {}
         if self.payment_profile:
-            res['address'] = self.payment_profile.address.id
-            res['address.rec_name'] = self.payment_profile.address.rec_name
-        return res
+            self.address = self.payment_profile.address.id
+            self.address.rec_name = self.payment_profile.address.rec_name
 
     def get_provider(self, name=None):
         """
@@ -513,11 +463,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
     @fields.depends('gateway')
     def on_change_gateway(self):
         if self.gateway:
-            return {
-                'provider': self.gateway.provider,
-                'method': self.gateway.method,
-            }
-        return {}
+            self.provider = self.gateway.provider
+            self.method = self.gateway.method
 
     def on_change_with_provider(self):
         return self.get_provider()
@@ -920,30 +867,25 @@ class BaseCreditCardViewMixin(object):
         """
         Try to parse the track1 and track2 data into Credit card information
         """
-        res = {}
-
         try:
             track1, track2 = self.swipe_data.split(';')
         except ValueError:
-            return {
-                'owner': '',
-                'number': '',
-                'expiry_month': '',
-                'expiry_year': '',
-            }
+            self.owner = ''
+            self.number = ''
+            self.expiry_month = ''
+            self.expiry_year = ''
+        else:
+            match = self.track1_re.match(track1)
+            if match:
+                # Track1 matched, extract info and send
+                assert match.group('FC').upper() == 'B', 'Unknown card Format Code'  # noqa
 
-        match = self.track1_re.match(track1)
-        if match:
-            # Track1 matched, extract info and send
-            assert match.group('FC').upper() == 'B', 'Unknown card Format Code'
+                self.owner = match.group('NAME')
+                self.number = match.group('PAN')
+                self.expiry_month = match.group('MM')
+                self.expiry_year = '20' + match.group('YY')
 
-            res['owner'] = match.group('NAME')
-            res['number'] = match.group('PAN')
-            res['expiry_month'] = match.group('MM')
-            res['expiry_year'] = '20' + match.group('YY')
-
-        # TODO: Match track 2
-        return res
+            # TODO: Match track 2
 
 
 class Party:
