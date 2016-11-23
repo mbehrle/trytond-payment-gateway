@@ -54,7 +54,7 @@ requires = [
 ]
 
 MODULE = 'payment_gateway'
-PREFIX = 'fio'
+PREFIX = 'm9s'
 MODULE2PREFIX = {
 }
 
