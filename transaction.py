@@ -119,6 +119,8 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             ('charge', 'Charge'),
             ('refund', 'Refund'),
         ], 'Type', required=True, select=True,
+        states=READONLY_IF_NOT_DRAFT,
+        depends=['state']
     )
     origin = fields.Reference(
         'Origin', selection='get_origin', select=True,
@@ -351,7 +353,7 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             'post': {
                 'invisible': ~(
                     (Eval('state') == 'completed') &
-                    (Eval('type') == 'charge')
+                    (Eval('type').in_(['charge', 'refund']))
                 )
             },
             'use_card': {
@@ -741,6 +743,7 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
         refund_transaction.origin = self
         refund_transaction.description = ('Refund for Transaction %s (%s)'
             % (self.rec_name, self.uuid))
+        refund_transaction.date = self.default_date()
         refund_transaction.save()
 
         return refund_transaction
@@ -936,6 +939,7 @@ class PaymentProfile(ModelSQL, ModelView):
 
     sequence = fields.Integer('Sequence', required=True)
     party = fields.Many2One('party.party', 'Party', required=True)
+    name = fields.Char('Cardholder name')  # Make required later
     address = fields.Many2One(
         'party.address', 'Address', required=True,
         domain=[('party', '=', Eval('party'))], depends=['party']
@@ -1067,6 +1071,7 @@ class AddPaymentProfile(Wizard):
         Profile = Pool().get('party.payment_profile')
 
         profile = Profile(
+            name=self.card_info.owner,
             party=self.card_info.party.id,
             address=self.card_info.address.id,
             gateway=self.card_info.gateway.id,
