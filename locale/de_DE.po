@@ -35,10 +35,6 @@ msgid "Settle is not available for provider %s."
 msgstr "\"Begleichung\" ist für Anbieter %s nicht verfügbar."
 
 msgctxt "error:payment_gateway.transaction:"
-msgid "The feature %s is not avaialable for provider %s"
-msgstr "Feature %s ist für Anbieter %s nicht verfügbar"
-
-msgctxt "error:payment_gateway.transaction:"
 msgid "Update Status is not available for provider %s."
 msgstr "\"Statusupdate\" ist für Anbieter %s nicht verfügbar."
 
@@ -85,6 +81,10 @@ msgstr "ID"
 msgctxt "field:party.payment_profile,last_4_digits:"
 msgid "Last 4 digits"
 msgstr "Letzte 4 Zahlen"
+
+msgctxt "field:party.payment_profile,name:"
+msgid "Cardholder name"
+msgstr "Kartenbesitzer"
 
 msgctxt "field:party.payment_profile,party:"
 msgid "Party"
@@ -481,7 +481,16 @@ msgstr "Alle"
 msgctxt ""
 "model:ir.action.act_window.domain,name:act_transaction_domain_authorized"
 msgid "Authorized"
-msgstr "Authorisiert"
+msgstr "Autorisiert"
+
+msgctxt "model:ir.action.act_window.domain,name:act_transaction_domain_cancel"
+msgid "Cancelled"
+msgstr "Annulliert"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_transaction_domain_completed"
+msgid "Completed"
+msgstr "Abgeschlossen"
 
 msgctxt "model:ir.action.act_window.domain,name:act_transaction_domain_draft"
 msgid "Draft"
@@ -495,6 +504,10 @@ msgctxt ""
 "model:ir.action.act_window.domain,name:act_transaction_domain_inprogress"
 msgid "In-Progress"
 msgstr "In Bearbeitung"
+
+msgctxt "model:ir.action.act_window.domain,name:act_transaction_domain_posted"
+msgid "Posted"
+msgstr "Festgeschrieben"
 
 msgctxt "model:ir.ui.menu,name:menu_payment_gateway"
 msgid "Payment Gateways"
