@@ -14,6 +14,9 @@ from trytond.transaction import Transaction
 from trytond.exceptions import UserError
 from trytond.model import ModelSQL, ModelView, Workflow, fields
 
+from nereid.contrib.locale import make_lazy_gettext
+
+_ = make_lazy_gettext('payment_gateway')
 
 __all__ = [
     'PaymentGateway', 'PaymentTransaction',
@@ -747,8 +750,9 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
         amount = amount or self.amount
         refund_transaction.amount = amount * -1
         refund_transaction.origin = self
-        refund_transaction.description = ('Refund for Transaction %s (%s)'
-            % (self.rec_name, self.uuid))
+        refund_transaction.description = (
+            unicode(_('Refund for Transaction %(name)s (%(uuid)s)',
+            name=self.rec_name, uuid=self.uuid)))
         refund_transaction.date = self.default_date()
         refund_transaction.save()
 

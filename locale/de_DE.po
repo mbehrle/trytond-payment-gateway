@@ -545,6 +545,10 @@ msgctxt "model:payment_gateway.transaction.use_card.view,name:"
 msgid "View for putting in credit card information"
 msgstr "Karteninformation"
 
+msgctxt "nereid:transaction.py:754"
+msgid "Refund for Transaction %(name)s (%(uuid)s)"
+msgstr "Erstattung für Transaktion %(name)s (%(uuid)s)"
+
 msgctxt "selection:party.payment_profile,expiry_month:"
 msgid "01-January"
 msgstr "01-Januar"
