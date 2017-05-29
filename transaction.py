@@ -766,7 +766,7 @@ class TransactionLog(ModelSQL, ModelView):
     timestamp = fields.DateTime('Event Timestamp', readonly=True)
     transaction = fields.Many2One(
         'payment_gateway.transaction', 'Transaction',
-        required=True, readonly=True,
+        required=True, readonly=True, ondelete='CASCADE',
     )
     is_system_generated = fields.Boolean('Is System Generated')
     log = fields.Text(
