@@ -703,6 +703,7 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             'credit': Decimal('0.0') if refund else amount,
             'amount_second_currency': amount_second_currency,
             'second_currency': second_currency,
+            'maturity_date': date,
         }, {
             'description': self.rec_name,
             'account': journal.debit_account.id,
@@ -992,7 +993,7 @@ class PaymentProfile(ModelSQL, ModelView):
 
     def get_rec_name(self, name=None):
         if self.last_4_digits:
-            return self.gateway.name + ' ' + ('xxxx ' * 3) + self.last_4_digits
+            return ' '.join([self.gateway.name, 'xxxx', self.last_4_digits])
         return 'Incomplete Card'
 
     @staticmethod
