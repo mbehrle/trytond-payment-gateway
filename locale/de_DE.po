@@ -150,10 +150,6 @@ msgctxt "field:party.payment_profile.add_view,party:"
 msgid "Party"
 msgstr "Partei"
 
-msgctxt "field:party.payment_profile.add_view,provider:"
-msgid "Provider"
-msgstr "Anbieter"
-
 msgctxt "field:party.payment_profile.add_view,swipe_data:"
 msgid "Swipe Card"
 msgstr "Karte durchziehen"
@@ -545,7 +541,7 @@ msgctxt "model:payment_gateway.transaction.use_card.view,name:"
 msgid "View for putting in credit card information"
 msgstr "Karteninformation"
 
-msgctxt "nereid:transaction.py:754"
+msgctxt "nereid:transaction.py:775"
 msgid "Refund for Transaction %(name)s (%(uuid)s)"
 msgstr "Erstattung für Transaktion %(name)s (%(uuid)s)"
 
