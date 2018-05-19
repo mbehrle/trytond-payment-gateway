@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 from trytond.pool import Pool
 from .transaction import PaymentTransaction, TransactionLog, PaymentGateway, \
@@ -7,6 +8,7 @@ from .transaction import PaymentTransaction, TransactionLog, PaymentGateway, \
 from .dummy import PaymentGatewayDummy, AddPaymentProfileViewDummy, \
     AddPaymentProfileDummy, DummyTransaction
 from .manual import PaymentGatewaySelf, ManualSelfTransaction
+from .party import PartyErase
 
 
 def register():
@@ -35,5 +37,6 @@ def register():
         AddPaymentProfileDummy,
         TransactionUseCard,
         CreateRefund,
+        PartyErase,
         module='payment_gateway', type_='wizard'
     )
