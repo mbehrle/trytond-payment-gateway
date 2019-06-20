@@ -328,6 +328,7 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
             ('authorized', 'cancel'),
             ('authorized', 'completed'),
             ('completed', 'posted'),
+            ('draft', 'posted'),       # direct charges for e.g. credit cards
         ))
         cls._buttons.update({
             'process': {
