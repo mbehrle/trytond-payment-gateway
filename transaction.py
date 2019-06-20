@@ -219,7 +219,15 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
         required=True, select=True
     )
     last_four_digits = fields.Char('Last Four Digits')
-
+    charge_id = fields.Char("Charge ID", readonly=True)
+    dispute_reason = fields.Char("Dispute Reason", readonly=True,
+        states={
+            'invisible': ~Eval('dispute_reason'),
+            })
+    dispute_status = fields.Char("Dispute Status", readonly=True,
+        states={
+            'invisible': ~Eval('dispute_status'),
+            })
     @classmethod
     def search_rec_name(cls, name, clause):
         return [

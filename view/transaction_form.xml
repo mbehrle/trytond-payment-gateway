@@ -29,6 +29,12 @@ this repository contains the full copyright notices and license terms. -->
             <field name="amount"/>
             <label name="currency"/>
             <field name="currency"/>
+            <label name="charge_id"/>
+            <field name="charge_id"/>
+            <label name="dispute_status"/>
+            <field name="dispute_status"/>
+            <label name="dispute_reason"/>
+            <field name="dispute_reason"/>
         </page>
         <page string="Other Information" id="other_info" col="6">
             <label name="company"/>
