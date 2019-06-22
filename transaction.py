@@ -228,6 +228,7 @@ class PaymentTransaction(Workflow, ModelSQL, ModelView):
         states={
             'invisible': ~Eval('dispute_status'),
             })
+
     @classmethod
     def search_rec_name(cls, name, clause):
         return [
