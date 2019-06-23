@@ -150,10 +150,6 @@ msgctxt "field:party.payment_profile.add_view,party:"
 msgid "Party"
 msgstr "Partei"
 
-msgctxt "field:party.payment_profile.add_view,provider:"
-msgid "Provider"
-msgstr "Anbieter"
-
 msgctxt "field:party.payment_profile.add_view,swipe_data:"
 msgid "Swipe Card"
 msgstr "Karte durchziehen"
@@ -254,6 +250,10 @@ msgctxt "field:payment_gateway.transaction,amount:"
 msgid "Amount"
 msgstr "Betrag"
 
+msgctxt "field:payment_gateway.transaction,charge_id:"
+msgid "Charge ID"
+msgstr "Belastungs-ID"
+
 msgctxt "field:payment_gateway.transaction,company:"
 msgid "Company"
 msgstr "Unternehmen"
@@ -285,6 +285,14 @@ msgstr "Datum"
 msgctxt "field:payment_gateway.transaction,description:"
 msgid "Description"
 msgstr "Beschreibung"
+
+msgctxt "field:payment_gateway.transaction,dispute_reason:"
+msgid "Dispute Reason"
+msgstr "Streitgrund"
+
+msgctxt "field:payment_gateway.transaction,dispute_status:"
+msgid "Dispute Status"
+msgstr "Streitstatus"
 
 msgctxt "field:payment_gateway.transaction,gateway:"
 msgid "Gateway"
@@ -545,7 +553,7 @@ msgctxt "model:payment_gateway.transaction.use_card.view,name:"
 msgid "View for putting in credit card information"
 msgstr "Karteninformation"
 
-msgctxt "nereid:transaction.py:775"
+msgctxt "nereid:transaction.py:785"
 msgid "Refund for Transaction %(name)s (%(uuid)s)"
 msgstr "Erstattung für Transaktion %(name)s (%(uuid)s)"
 
